@@ -5,9 +5,15 @@ import { Routes } from 'discord-api-types/v9';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import fetch from 'node-fetch';
 
+const steamAPI = new URL(
+	`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?format=json&key=${config.apiKey}`
+);
+
 // Get cumulated time from steam API
-async function getTime(url) {
-	let playTime = await fetch(url)
+async function getTime(id) {
+	steamAPI.searchParams.set('steamid', id);
+
+	let playTime = await fetch(steamAPI)
 		.then((res) => res.json())
 		.then((json) =>
 			json.response.games.reduce((accumulator, current) => {
@@ -50,9 +56,7 @@ client.on('interactionCreate', async (interaction) => {
 		const ID = interaction.options.getString('steam-id');
 		if (ID.toString().length === 17) {
 			await interaction.reply(
-				`Vous avez passé ${await getTime(
-					`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=9D2CF1FA472E23059BB3D8657A5C85D3&steamid=${ID}&format=json`
-				)} heures`
+				`Vous avez passé ${await getTime(ID)} heures`
 			);
 		} else {
 			await interaction.reply('SteamID invalide');
