@@ -1,14 +1,15 @@
 {
-    "cSpell.words": [
-        "discordjs",
-        "lastlogoff",
-        "ownedgames",
-        "personaname",
-        "profileurl",
-        "recentactivity",
-        "steamid",
-        "steamids",
-        "steamprofile",
-        "timecreated"
-    ]
+	"cSpell.words": [
+		"avatarmedium",
+		"discordjs",
+		"lastlogoff",
+		"ownedgames",
+		"personaname",
+		"profileurl",
+		"recentactivity",
+		"steamid",
+		"steamids",
+		"steamprofile",
+		"timecreated"
+	]
 }

@@ -3,26 +3,17 @@ import fetch from 'node-fetch';
 import { MessageEmbed } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 
-function convertTime(timestamp) {
-	let date = new Date(timestamp * 1000);
-	let hours = date.getHours();
-	let minutes = date.getMinutes().toString();
-	let seconds = date.getSeconds().toString();
-
-	return hours + ':' + minutes + ':' + seconds;
-}
-
 const steamAPI_steamProfile = new URL(
 	`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.apiKey}&format=json`
 );
 
 let COMMAND_DEFINITION = new SlashCommandBuilder()
 	.setName('steamprofile')
-	.setDescription('Replies with informations of your Steam profile')
+	.setDescription('Information sur le profile Steam')
 	.addStringOption((option) =>
 		option
 			.setName('steam-id')
-			.setDescription('Insert your SteamID64')
+			.setDescription('Insérer votre SteamID64')
 			.setRequired(true)
 	);
 
@@ -68,7 +59,9 @@ async function run(interaction) {
 			embeds: [await steamProfile(id)],
 		});
 	} else {
-		await interaction.reply('SteamID invalide');
+		await interaction.reply(
+			'SteamID invalide, veuillez réessayer en vérifiant bien la SteamID que vous avez indiqué est valide'
+		);
 	}
 }
 

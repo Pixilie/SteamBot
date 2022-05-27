@@ -8,11 +8,11 @@ const steamAPI_timePlayed = new URL(
 
 const COMMAND_DEFINITION = new SlashCommandBuilder()
 	.setName('time')
-	.setDescription('Replies with the time you lost on Steam games')
+	.setDescription('Temps de jeu sur Steam')
 	.addStringOption((option) =>
 		option
 			.setName('steam-id')
-			.setDescription('Insert your SteamID')
+			.setDescription('Insérer votre SteamID64')
 			.setRequired(true)
 	);
 
@@ -39,7 +39,9 @@ async function run(interaction) {
 			`Vous avez joué ${await getTime(id)} heures sur Steam`
 		);
 	} else {
-		await interaction.reply('SteamID invalide');
+		await interaction.reply(
+			'SteamID invalide, veuillez réessayer en vérifiant bien la SteamID que vous avez indiqué est valide'
+		);
 	}
 }
 

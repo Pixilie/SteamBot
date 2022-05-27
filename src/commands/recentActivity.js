@@ -9,12 +9,12 @@ const steamAPI_recentActivity = new URL(
 let COMMAND_DEFINITION = new SlashCommandBuilder()
 	.setName('recentactivity')
 	.setDescription(
-		'Replies with all the information about your recent activity'
+		'Nombre de jeux joués, et le temps passé sur les dernières semaines'
 	)
 	.addStringOption((option) =>
 		option
 			.setName('steam-id')
-			.setDescription('Insert your SteamID64')
+			.setDescription('Insérer votre SteamID64')
 			.setRequired(true)
 	);
 
@@ -48,7 +48,9 @@ async function run(interaction) {
 			`Vous avez passé ${values.lastPlayed_time} heures les 2 dernières semaines sur un total de ${values.lastPlayed_gamesCount} jeux, qui sont : ${values.lastPlayed_gameName}`
 		);
 	} else {
-		await interaction.reply('SteamID invalide');
+		await interaction.reply(
+			'SteamID invalide, veuillez réessayer en vérifiant bien la SteamID que vous avez indiqué est valide'
+		);
 	}
 }
 
