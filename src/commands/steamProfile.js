@@ -3,6 +3,15 @@ import fetch from 'node-fetch';
 import { MessageEmbed } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 
+function convertTime(timestamp) {
+	let date = new Date(timestamp * 1000);
+	let hours = date.getHours();
+	let minutes = date.getMinutes().toString();
+	let seconds = date.getSeconds().toString();
+
+	return hours + ':' + minutes + ':' + seconds;
+}
+
 const steamAPI_steamProfile = new URL(
 	`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.apiKey}&format=json`
 );
@@ -19,50 +28,44 @@ let COMMAND_DEFINITION = new SlashCommandBuilder()
 
 // Get cumulated time from steam API
 async function steamProfile(id) {
-	steamAPI_steamProfile.searchParams.set('steamid', id);
+	steamAPI_steamProfile.searchParams.set('steamids', id);
 
 	let player = await fetch(steamAPI_steamProfile)
 		.then((res) => res.json())
-		.then((json) => json.response.player);
+		.then((json) => json.response.players[0]);
 
 	const steamProfileEmbed = new MessageEmbed()
 		.setColor('#0099ff')
-		.setTitle(`Profile Steam de ${player.name}`)
+		.setTitle(`Profile Steam de ${player.personaname}`)
 		.setURL(player.profileurl)
-		.setAuthor({
-			name: 'Some name',
-			iconURL: 'https://i.imgur.com/AfFp7pu.png',
-			url: 'https://discord.js.org',
-		})
 		.setDescription(
-			`Voici toutes les informations du profile Steam de ${player.name}`
+			`Voici toutes les informations du profile Steam de ${player.personaname}`
 		)
-		.setThumbnail(player.avatar)
+		.setThumbnail(player.avatarmedium)
 		.addFields(
-			{ name: 'Regular field title', value: 'Some value here' },
-			{ name: '\u200B', value: '\u200B' },
 			{
-				name: 'Inline field title',
-				value: 'Some value here',
-				inline: true,
+				name: 'SteamID',
+				value: player.steamid,
 			},
 			{
-				name: 'Inline field title',
-				value: 'Some value here',
-				inline: true,
+				name: 'Dernière connexion',
+				value: `<t:${player.lastlogoff}:f>`,
+			},
+			{
+				name: 'Date de création du compte',
+				value: `<t:${player.timecreated}:F>`,
 			}
-		)
-		.addField('Inline field title', 'Some value here', true)
-		.setImage('https://i.imgur.com/AfFp7pu.png');
+		);
 
 	return steamProfileEmbed;
 }
 
 async function run(interaction) {
-	const ID = interaction.options.getString('steam-id');
-	if (ID.toString().length === 17) {
+	const id = interaction.options.getString('steam-id');
+
+	if (id.toString().length === 17) {
 		await interaction.reply({
-			embeds: [steamProfile.steamProfile(ID)],
+			embeds: [await steamProfile(id)],
 		});
 	} else {
 		await interaction.reply('SteamID invalide');

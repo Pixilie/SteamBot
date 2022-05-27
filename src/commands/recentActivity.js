@@ -31,9 +31,9 @@ async function recentActivity(id) {
 	}, 0);
 	lastPlayed_time = Math.round(lastPlayed_time / 60);
 
-	let lastPlayed_gameName = response.games.reduce((accumulator, current) => {
-		return accumulator + current.name;
-	}, 0);
+	let lastPlayed_gameName = response.games
+		.map((current) => current.name)
+		.join(', ');
 
 	let lastPlayed_gamesCount = response.total_count;
 
