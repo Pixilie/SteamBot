@@ -7,13 +7,14 @@ import * as getTime from './commands/getTime.js';
 import * as recentActivity from './commands/recentActivity.js';
 import * as gamesOwned from './commands/gamesOwned.js';
 import * as steamProfile from './commands/steamProfile.js';
+import * as helpCommand from './commands/help.js';
 import { MessageEmbed } from 'discord.js';
 
 // Authentifications of the bot
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 client.once('ready', () => {
-	console.log('Ready!');
+	console.log('SteamBot est prêt !');
 });
 
 // Slash commands registration
@@ -22,13 +23,16 @@ const commands = [
 	recentActivity.COMMAND_DEFINITION,
 	gamesOwned.COMMAND_DEFINITION,
 	steamProfile.COMMAND_DEFINITION,
+	helpCommand.COMMAND_DEFINITION,
 ].map((command) => command.toJSON());
 
 const rest = new REST({ version: '9' }).setToken(config.token);
 rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), {
 	body: commands,
 })
-	.then(() => console.log('Successfully registered application commands.'))
+	.then(() =>
+		console.log('Toutes les commandes ont été correctement enregistrées')
+	)
 	.catch(console.error);
 
 client.on('interactionCreate', async (interaction) => {
@@ -46,6 +50,9 @@ client.on('interactionCreate', async (interaction) => {
 			break;
 		case 'steamprofile':
 			steamProfile.run(interaction);
+			break;
+		case 'help':
+			helpCommand.run(interaction);
 			break;
 		default:
 			break;
