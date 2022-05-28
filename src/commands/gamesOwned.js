@@ -8,11 +8,11 @@ const steamAPI_gamesOwned = new URL(
 
 let COMMAND_DEFINITION = new SlashCommandBuilder()
 	.setName('ownedgames')
-	.setDescription('Nombre de jeux possédés')
+	.setDescription('Number of games owned by a Steam user')
 	.addStringOption((option) =>
 		option
 			.setName('steam-id')
-			.setDescription('Insérer votre SteamID64')
+			.setDescription('SteamID64 of the user')
 			.setRequired(true)
 	);
 
@@ -30,10 +30,10 @@ async function gamesOwned(id) {
 async function run(interaction) {
 	const ID = interaction.options.getString('steam-id');
 	if (ID.toString().length === 17) {
-		await interaction.reply(`Vous avez ${await gamesOwned(ID)} jeux.`);
+		await interaction.reply(`You own ${await gamesOwned(ID)} games.`);
 	} else {
 		await interaction.reply(
-			'SteamID invalide, veuillez réessayer en vérifiant bien la SteamID que vous avez indiqué est valide'
+			'Invalid SteamID please try again by verifying the SteamID you have indicated is valid'
 		);
 	}
 }

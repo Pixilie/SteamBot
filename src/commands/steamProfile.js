@@ -9,11 +9,11 @@ const steamAPI_steamProfile = new URL(
 
 let COMMAND_DEFINITION = new SlashCommandBuilder()
 	.setName('steamprofile')
-	.setDescription('Information sur le profile Steam')
+	.setDescription('Informations on a Steam profile')
 	.addStringOption((option) =>
 		option
 			.setName('steam-id')
-			.setDescription('Insérer votre SteamID64')
+			.setDescription('SteamID64 of the profile')
 			.setRequired(true)
 	);
 
@@ -27,10 +27,10 @@ async function steamProfile(id) {
 
 	const steamProfileEmbed = new MessageEmbed()
 		.setColor('#0099ff')
-		.setTitle(`Profile Steam de ${player.personaname}`)
+		.setTitle(`${player.personaname}'s Steam profile`)
 		.setURL(player.profileurl)
 		.setDescription(
-			`Voici toutes les informations du profile Steam de ${player.personaname}`
+			`Here are all the informations on ${player.personaname}'s profile`
 		)
 		.setThumbnail(player.avatarmedium)
 		.addFields(
@@ -39,11 +39,11 @@ async function steamProfile(id) {
 				value: player.steamid,
 			},
 			{
-				name: 'Dernière connexion',
+				name: 'Last online',
 				value: `<t:${player.lastlogoff}:f>`,
 			},
 			{
-				name: 'Date de création du compte',
+				name: 'Creation date',
 				value: `<t:${player.timecreated}:F>`,
 			}
 		);
@@ -60,7 +60,7 @@ async function run(interaction) {
 		});
 	} else {
 		await interaction.reply(
-			'SteamID invalide, veuillez réessayer en vérifiant bien la SteamID que vous avez indiqué est valide'
+			'Invalid SteamID please try again by verifying the SteamID you have indicated is valid'
 		);
 	}
 }

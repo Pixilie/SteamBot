@@ -14,7 +14,8 @@ import { MessageEmbed } from 'discord.js';
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 client.once('ready', () => {
-	console.log('SteamBot est prêt !');
+	console.log('SteamBot is ready!');
+	client.user.setActivity('your Steam stats', { type: 'WATCHING' });
 });
 
 // Slash commands registration
@@ -30,9 +31,7 @@ const rest = new REST({ version: '9' }).setToken(config.token);
 rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), {
 	body: commands,
 })
-	.then(() =>
-		console.log('Toutes les commandes ont été correctement enregistrées')
-	)
+	.then(() => console.log('Successfully registered commands!'))
 	.catch(console.error);
 
 client.on('interactionCreate', async (interaction) => {
