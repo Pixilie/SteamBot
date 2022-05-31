@@ -2,7 +2,7 @@ import config from '../config.json' assert { type: 'json' };
 import fetch from 'node-fetch';
 
 const steamAPI_getNameByID = new URL(
-	`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${config.apiKey}`
+	`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${config.apiKey}&format=json`
 );
 
 async function getNameByID(name) {
