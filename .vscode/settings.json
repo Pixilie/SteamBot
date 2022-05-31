@@ -10,6 +10,7 @@
 		"steamid",
 		"steamids",
 		"steamprofile",
-		"timecreated"
+		"timecreated",
+		"vanityurl"
 	]
 }

@@ -1,6 +1,7 @@
 import config from '../../config.json' assert { type: 'json' };
 import fetch from 'node-fetch';
 import { SlashCommandBuilder } from '@discordjs/builders';
+import * as getNameByID from '../getNameByID.js';
 
 const steamAPI_timePlayed = new URL(
 	`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?format=json&key=${config.apiKey}`
@@ -33,10 +34,13 @@ async function getTime(id) {
 
 async function run(interaction) {
 	let id = interaction.options.getString('steam-id');
+	console.log(await getTime(getNameByID.getNameByID(id)));
 
 	if (id.toString().length === 17) {
 		await interaction.reply(
-			`You have played ${await getTime(id)} hours on Steam`
+			`You have played ${await getTime(
+				getNameByID.getNameByID(id)
+			)} hours on Steam`
 		);
 	} else {
 		await interaction.reply(
