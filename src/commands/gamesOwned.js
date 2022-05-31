@@ -28,9 +28,9 @@ async function gamesOwned(id) {
 }
 
 async function run(interaction) {
-	const ID = interaction.options.getString('steam-id');
-	if (ID.toString().length === 17) {
-		await interaction.reply(`You own ${await gamesOwned(ID)} games.`);
+	const id = interaction.options.getString('steam-id');
+	if (id.toString().length === 17) {
+		await interaction.reply(`You own ${await gamesOwned(id)} games.`);
 	} else {
 		await interaction.reply(
 			'Invalid SteamID please try again by verifying the SteamID you have indicated is valid'

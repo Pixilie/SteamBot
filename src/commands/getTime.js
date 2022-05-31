@@ -12,13 +12,14 @@ const COMMAND_DEFINITION = new SlashCommandBuilder()
 	.setDescription('Get cumulated time from Steam')
 	.addStringOption((option) =>
 		option
-			.setName('steam-id')
+			.setName('name')
 			.setDescription('SteamID64 of the user')
 			.setRequired(true)
 	);
 
 // Get cumulated time from steam API
-async function getTime(id) {
+async function getTime(name) {
+	const id = await getNameByID.getNameByID(name);
 	steamAPI_timePlayed.searchParams.set('steamid', id);
 
 	let playTime = await fetch(steamAPI_timePlayed)
@@ -33,20 +34,11 @@ async function getTime(id) {
 }
 
 async function run(interaction) {
-	let id = interaction.options.getString('steam-id');
-	console.log(await getTime(getNameByID.getNameByID(id)));
+	let name = interaction.options.getString('name');
 
-	if (id.toString().length === 17) {
-		await interaction.reply(
-			`You have played ${await getTime(
-				getNameByID.getNameByID(id)
-			)} hours on Steam`
-		);
-	} else {
-		await interaction.reply(
-			'Invalid SteamID please try again by verifying the SteamID you have indicated is valid'
-		);
-	}
+	await interaction.reply(
+		`You have played ${await getTime(name)} hours on Steam`
+	);
 }
 
 export { run, COMMAND_DEFINITION };
