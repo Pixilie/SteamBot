@@ -12,10 +12,7 @@ async function getNameByID(name) {
 		.then((res) => res.json())
 		.then((json) => json.response);
 
-	let steamid = response.steamid;
-	let success = response.success;
-
-	return { steamid, success };
-}
+	return response.steamid ?? null;
+} 
 
 export { getNameByID };

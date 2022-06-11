@@ -20,14 +20,21 @@ const COMMAND_DEFINITION = new SlashCommandBuilder()
 // Get cumulated time from steam API
 async function getTime(name) {
 	const id = await getNameByID.getNameByID(name);
+	// TODO: handle if no steamid
 	steamAPI_timePlayed.searchParams.set('steamid', id);
 
 	let playTime = await fetch(steamAPI_timePlayed)
-		.then((res) => res.json())
+		.then((res) => {
+			if (res.status == 500) {
+				// TODO: handle properly
+				return
+			}
+
+			return res.json()
+		})
 		.then((json) =>
-			json.response.games.reduce((accumulator, current) => {
-				return accumulator + current.playtime_forever;
-			}, 0)
+			json.response.games.reduce((accumulator, current) => accumulator + current.playtime_forever
+				, 0)
 		);
 
 	return Math.round(playTime / 60);
