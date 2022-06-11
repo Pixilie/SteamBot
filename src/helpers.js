@@ -5,7 +5,7 @@ const steamAPI_getNameByID = new URL(
 	`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${config.apiKey}&format=json`
 );
 
-async function getNameByID(name) {
+async function getIDByName(name) {
 	steamAPI_getNameByID.searchParams.set('vanityurl', name);
 
 	let response = await fetch(steamAPI_getNameByID)
@@ -13,6 +13,6 @@ async function getNameByID(name) {
 		.then((json) => json.response);
 
 	return response.steamid ?? null;
-} 
+}
 
-export { getNameByID };
+export { getIDByName };
