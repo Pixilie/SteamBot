@@ -29,6 +29,7 @@ async function recentActivity(id) {
 	let lastPlayed_time = response.games.reduce((accumulator, current) => {
 		return accumulator + current.playtime_2weeks;
 	}, 0);
+
 	lastPlayed_time = Math.round(lastPlayed_time / 60);
 
 	let lastPlayed_gameName = response.games

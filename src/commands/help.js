@@ -16,7 +16,7 @@ const helpCommand = new MessageEmbed()
 	)
 	.addFields(
 		{
-			name: '/time `steam-id`',
+			name: '/time `SteamID64 or pseudonym`',
 			value: 'DIsplay the cumulated time of a Steam user',
 		},
 		{

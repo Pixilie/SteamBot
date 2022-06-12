@@ -20,9 +20,9 @@ let COMMAND_DEFINITION = new SlashCommandBuilder()
 async function gamesOwned(id) {
 	steamAPI_gamesOwned.searchParams.set('steamid', id);
 
-	let gamesOwned = await fetch(steamAPI_gamesOwned)
-		.then((res) => res.json())
-		.then((json) => json.response.game_count);
+	let content = await fetch(steamAPI_gamesOwned).then((res) => res.json());
+
+	let gamesOwned = content.response.game_count;
 
 	return gamesOwned;
 }
