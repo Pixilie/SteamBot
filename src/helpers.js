@@ -37,5 +37,6 @@ export async function getIDByNameOrID(value) {
 	// Otherwise, try to get the ID by name
 	const id = await getIDByName(value);
 
+	/TODO : Error if can't convert/;
 	return id.toString();
 }

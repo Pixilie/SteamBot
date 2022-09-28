@@ -27,13 +27,13 @@ async function getTime(value) {
 		await getIDByNameOrID(value)
 	);
 
-	let response = await fetch(steamAPI_timePlayed);
+	let APIresponse = await fetch(steamAPI_timePlayed);
 
-	if (response.status !== 200) {
+	if (APIresponse.status !== 200) {
 		return { error: `An error has occurred, ${value} is invalid` };
 	}
 
-	let content = await response.json();
+	let content = await APIresponse.json();
 
 	let playTime = content?.response.games.reduce(
 		(accumulator, current) => accumulator + current.playtime_forever,

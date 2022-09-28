@@ -20,11 +20,11 @@ const helpCommand = new MessageEmbed()
 			value: 'DIsplay the cumulated time of a Steam user',
 		},
 		{
-			name: '/ownedgames `steam-id`',
+			name: '/ownedgames `SteamID64 or pseudonym`',
 			value: `Display the number of games owned by a Steam user`,
 		},
 		{
-			name: '/steamprofile `steam-id`',
+			name: '/steamprofile `SteamID64 or pseudonym`',
 			value: `Display informations on a Steam user`,
 		},
 		{

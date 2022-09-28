@@ -1,6 +1,7 @@
 import config from '../../config.json' assert { type: 'json' };
 import fetch from 'node-fetch';
 import { SlashCommandBuilder } from '@discordjs/builders';
+import { getIDByNameOrID } from '../helpers.js';
 
 const steamAPI_gamesOwned = new URL(
 	`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?format=json&key=${config.apiKey}`
@@ -11,31 +12,43 @@ let COMMAND_DEFINITION = new SlashCommandBuilder()
 	.setDescription('Number of games owned by a Steam user')
 	.addStringOption((option) =>
 		option
-			.setName('steam-id')
-			.setDescription('SteamID64 of the user')
+			.setName('arguments')
+			.setDescription('Pseudonym or SteamID of the user')
 			.setRequired(true)
 	);
 
-// Get cumulated time from steam API
-async function gamesOwned(id) {
-	steamAPI_gamesOwned.searchParams.set('steamid', id);
+/**
+ * Get number of games you own from steam API with the pseudonym or the SteamID of the user
+ * @param {string} value Pseudonym or SteamID of the user
+ */
+async function gamesOwned(value) {
+	steamAPI_gamesOwned.searchParams.set(
+		'steamid',
+		await getIDByNameOrID(value)
+	);
 
-	let content = await fetch(steamAPI_gamesOwned).then((res) => res.json());
+	let apiResponse = await fetch(steamAPI_gamesOwned);
+	let content = await apiResponse.json();
+
+	if (apiResponse.status !== 200) {
+		return { error: `An error has occurred, ${value} is invalid` };
+	}
 
 	let gamesOwned = content.response.game_count;
 
-	return gamesOwned;
+	return { games: gamesOwned };
 }
 
 async function run(interaction) {
-	const id = interaction.options.getString('steam-id');
-	if (id.toString().length === 17) {
-		await interaction.reply(`You own ${await gamesOwned(id)} games.`);
-	} else {
-		await interaction.reply(
-			'Invalid SteamID please try again by verifying the SteamID you have indicated is valid'
-		);
+	let value = interaction.options.getString('arguments');
+
+	const { games, error } = await gamesOwned(value);
+
+	if (error) {
+		return interaction.reply({ content: error, ephemeral: true });
 	}
+
+	await interaction.reply(`You own ${games} games on Steam`);
 }
 
 export { run, COMMAND_DEFINITION };

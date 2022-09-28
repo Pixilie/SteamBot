@@ -2,6 +2,7 @@ import config from '../../config.json' assert { type: 'json' };
 import fetch from 'node-fetch';
 import { MessageEmbed } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
+import { getIDByNameOrID } from '../helpers.js';
 
 const steamAPI_steamProfile = new URL(
 	`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.apiKey}&format=json`
@@ -12,18 +13,28 @@ let COMMAND_DEFINITION = new SlashCommandBuilder()
 	.setDescription('Informations on a Steam profile')
 	.addStringOption((option) =>
 		option
-			.setName('steam-id')
-			.setDescription('SteamID64 of the profile')
+			.setName('arguments')
+			.setDescription('Pseudonym or SteamID of the user')
 			.setRequired(true)
 	);
 
-// Get cumulated time from steam API
-async function steamProfile(id) {
-	steamAPI_steamProfile.searchParams.set('steamids', id);
+/**
+ * Get steam user's profile with the pseudonym or the SteamID of the user
+ * @param {string} value Pseudonym or SteamID of the user
+ */
+async function steamProfile(value) {
+	steamAPI_steamProfile.searchParams.set(
+		'steamids',
+		await getIDByNameOrID(value)
+	);
 
-	let player = await fetch(steamAPI_steamProfile)
-		.then((res) => res.json())
-		.then((json) => json.response.players[0]);
+	let APIresponse = await fetch(steamAPI_steamProfile);
+	let content = await APIresponse.json();
+	let player = content.response.players[0];
+
+	if (APIresponse.status !== 200) {
+		return { error: `An error has occurred, ${value} is invalid` };
+	}
 
 	const steamProfileEmbed = new MessageEmbed()
 		.setColor('#0099ff')
@@ -48,21 +59,19 @@ async function steamProfile(id) {
 			}
 		);
 
-	return steamProfileEmbed;
+	return { profile: steamProfileEmbed };
 }
 
 async function run(interaction) {
-	const id = interaction.options.getString('steam-id');
+	let value = interaction.options.getString('arguments');
 
-	if (id.toString().length === 17) {
-		await interaction.reply({
-			embeds: [await steamProfile(id)],
-		});
-	} else {
-		await interaction.reply(
-			'Invalid SteamID please try again by verifying the SteamID you have indicated is valid'
-		);
+	const { profile, error } = await steamProfile(value);
+
+	if (error) {
+		return interaction.reply({ content: error, ephemeral: true });
 	}
+
+	await interaction.reply({ embeds: [profile] });
 }
 
 export { run, COMMAND_DEFINITION };

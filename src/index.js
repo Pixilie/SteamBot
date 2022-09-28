@@ -8,7 +8,6 @@ import * as recentActivity from './commands/recentActivity.js';
 import * as gamesOwned from './commands/gamesOwned.js';
 import * as steamProfile from './commands/steamProfile.js';
 import * as helpCommand from './commands/help.js';
-import { MessageEmbed } from 'discord.js';
 
 // Authentifications of the bot
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
