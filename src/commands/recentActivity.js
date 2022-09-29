@@ -2,6 +2,7 @@ import config from '../../config.json' assert { type: 'json' };
 import fetch from 'node-fetch';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { getIDByNameOrID } from '../helpers.js';
+import { isPrivate } from '../helpers.js';
 
 const steamAPI_recentActivity = new URL(
 	`http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?format=json&key=${config.apiKey}`
@@ -38,6 +39,11 @@ async function recentActivity(value) {
 	}
 
 	let content = await apiResponse.json();
+
+	if ((await isPrivate(content.response)) === true) {
+		return { error: `This profile is private` };
+	}
+
 	let games = content.response.games;
 
 	let lastPlayed_time = games.reduce((accumulator, current) => {

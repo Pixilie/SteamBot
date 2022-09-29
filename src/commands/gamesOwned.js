@@ -2,6 +2,7 @@ import config from '../../config.json' assert { type: 'json' };
 import fetch from 'node-fetch';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { getIDByNameOrID } from '../helpers.js';
+import { isPrivate } from '../helpers.js';
 
 const steamAPI_gamesOwned = new URL(
 	`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?format=json&key=${config.apiKey}`
@@ -36,6 +37,11 @@ async function gamesOwned(value) {
 	}
 
 	let content = await apiResponse.json();
+
+	if ((await isPrivate(content.response)) === true) {
+		return { error: `This profile is private` };
+	}
+
 	let gamesOwned = content.response.game_count;
 
 	return { games: gamesOwned };

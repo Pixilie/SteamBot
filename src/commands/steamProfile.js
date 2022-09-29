@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import { MessageEmbed } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { getIDByNameOrID } from '../helpers.js';
+import { isPrivate } from '../helpers.js';
 
 const steamAPI_steamProfile = new URL(
 	`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.apiKey}&format=json`
@@ -37,6 +38,11 @@ async function steamProfile(value) {
 	}
 
 	let content = await APIresponse.json();
+
+	if ((await isPrivate(content.response)) === true) {
+		return { error: `This profile is private` };
+	}
+
 	let player = content.response.players[0];
 
 	const steamProfileEmbed = new MessageEmbed()

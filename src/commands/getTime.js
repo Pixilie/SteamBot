@@ -38,7 +38,7 @@ async function getTime(value) {
 
 	let content = await APIresponse.json();
 
-	if (isPrivate(content.response)) {
+	if ((await isPrivate(content.response)) === true) {
 		return { error: `This profile is private` };
 	}
 

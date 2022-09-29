@@ -1,5 +1,3 @@
-import config from '../../config.json' assert { type: 'json' };
-import fetch from 'node-fetch';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { MessageEmbed } from 'discord.js';
 
@@ -17,7 +15,7 @@ const helpCommand = new MessageEmbed()
 	.addFields(
 		{
 			name: '/time `SteamID64 or pseudonym`',
-			value: 'DIsplay the cumulated time of a Steam user',
+			value: 'Display the cumulated time of a Steam user',
 		},
 		{
 			name: '/ownedgames `SteamID64 or pseudonym`',
@@ -28,7 +26,7 @@ const helpCommand = new MessageEmbed()
 			value: `Display informations on a Steam user`,
 		},
 		{
-			name: '/recentactivity `steam-id`',
+			name: '/recentactivity `SteamID64 or pseudonym`',
 			value: `Display the last activity of a Steam user`,
 		}
 	);
