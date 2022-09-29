@@ -27,6 +27,8 @@ async function getTime(value) {
 		await getIDByNameOrID(value)
 	);
 
+	console.log('Get time command executed');
+
 	let APIresponse = await fetch(steamAPI_timePlayed);
 
 	if (APIresponse.status !== 200) {

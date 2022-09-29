@@ -29,13 +29,15 @@ async function recentActivity(value) {
 		await getIDByNameOrID(value)
 	);
 
+	console.log('Recent activity command executed');
+
 	let apiResponse = await fetch(steamAPI_recentActivity);
-	let content = await apiResponse.json();
 
 	if (apiResponse.status !== 200) {
 		return { error: `An error has occurred, ${value} is invalid` };
 	}
 
+	let content = await apiResponse.json();
 	let games = content.response.games;
 
 	let lastPlayed_time = games.reduce((accumulator, current) => {

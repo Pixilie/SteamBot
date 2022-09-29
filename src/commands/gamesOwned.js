@@ -27,13 +27,15 @@ async function gamesOwned(value) {
 		await getIDByNameOrID(value)
 	);
 
+	console.log('Games owned command executed');
+
 	let apiResponse = await fetch(steamAPI_gamesOwned);
-	let content = await apiResponse.json();
 
 	if (apiResponse.status !== 200) {
 		return { error: `An error has occurred, ${value} is invalid` };
 	}
 
+	let content = await apiResponse.json();
 	let gamesOwned = content.response.game_count;
 
 	return { games: gamesOwned };

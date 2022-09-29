@@ -28,13 +28,16 @@ async function steamProfile(value) {
 		await getIDByNameOrID(value)
 	);
 
+	console.log('Steam profile command executed');
+
 	let APIresponse = await fetch(steamAPI_steamProfile);
-	let content = await APIresponse.json();
-	let player = content.response.players[0];
 
 	if (APIresponse.status !== 200) {
 		return { error: `An error has occurred, ${value} is invalid` };
 	}
+
+	let content = await APIresponse.json();
+	let player = content.response.players[0];
 
 	const steamProfileEmbed = new MessageEmbed()
 		.setColor('#0099ff')

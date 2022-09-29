@@ -1,11 +1,13 @@
 import config from '../config.json' assert { type: 'json' };
 import fetch from 'node-fetch';
+import { Client, Intents } from 'discord.js';
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord-api-types/v9';
+import { SlashCommandBuilder } from '@discordjs/builders';
 
 const steamAPI_getNameByID = new URL(
 	`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${config.apiKey}&format=json`
 );
-
-// TODO : Add a check to verify that getIDByName doesn't return 'null'
 
 /**
  * Get the name of a Steam user by his SteamID64
@@ -37,6 +39,9 @@ export async function getIDByNameOrID(value) {
 	// Otherwise, try to get the ID by name
 	const id = await getIDByName(value);
 
-	/TODO : Error if can't convert/;
-	return id.toString();
+	if (id === null) {
+		console.log(`No SteamID found for ${value}`);
+	} else {
+		return id.toString();
+	}
 }
