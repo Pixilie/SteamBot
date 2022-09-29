@@ -2,6 +2,7 @@ import config from '../../config.json' assert { type: 'json' };
 import fetch from 'node-fetch';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { getIDByNameOrID } from '../helpers.js';
+import { isPrivate } from '../helpers.js';
 
 const steamAPI_timePlayed = new URL(
 	`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?format=json&key=${config.apiKey}`
@@ -36,6 +37,10 @@ async function getTime(value) {
 	}
 
 	let content = await APIresponse.json();
+
+	if (isPrivate(content.response)) {
+		return { error: `This profile is private` };
+	}
 
 	let playTime = content?.response.games.reduce(
 		(accumulator, current) => accumulator + current.playtime_forever,

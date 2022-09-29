@@ -42,6 +42,20 @@ export async function getIDByNameOrID(value) {
 	if (id === null) {
 		console.log(`No SteamID found for ${value}`);
 	} else {
+		console.log(`SteamID found for ${value}: ${id}`);
 		return id.toString();
+	}
+}
+
+/**
+ * Check if the profile is private
+ * @param {string} name
+ * @returns {Promise<string>}
+ */
+export async function isPrivate(value) {
+	console.log('isPrivate function executed');
+	let answer = Object.keys(value);
+	if (answer.length === 0) {
+		return true;
 	}
 }
