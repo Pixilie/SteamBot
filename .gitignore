@@ -1,4 +1,13 @@
+# Logs
+logs
+*.log
+yarn-debug.log*
+yarn-error.log*
+
+# Files
 node_modules
 config.json
-.gitattributes
-.vscode
+
+# Editor directories
+.vscode/*
+!.vscode/extensions.json
