@@ -8,12 +8,13 @@ import * as recentActivity from './commands/recentActivity.js';
 import * as gamesOwned from './commands/gamesOwned.js';
 import * as steamProfile from './commands/steamProfile.js';
 import * as helpCommand from './commands/help.js';
+import { Logtail } from '@logtail/node';
+import { Log } from './helpers.js';
 
 // Authentifications of the bot
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 client.once('ready', () => {
-	console.log('SteamBot is ready!');
 	client.user.setActivity('your Steam stats', { type: 'WATCHING' });
 });
 
@@ -27,10 +28,10 @@ const commands = [
 ].map((command) => command.toJSON());
 
 const rest = new REST({ version: '9' }).setToken(config.token);
-rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), {
+rest.put(Routes.applicationCommands(config.clientId), {
 	body: commands,
 })
-	.then(() => console.log('Successfully registered commands!'))
+	.then(() => console.log("Successfully registered application's commands"))
 	.catch(console.error);
 
 client.on('interactionCreate', async (interaction) => {
@@ -59,3 +60,4 @@ client.on('interactionCreate', async (interaction) => {
 
 // Login to Discord
 client.login(config.token);
+Log('Successfully logged in. SteamBot is ready!');

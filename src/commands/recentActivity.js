@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { getIDByNameOrID } from '../helpers.js';
 import { isPrivate } from '../helpers.js';
+import { Log } from '../helpers.js';
 
 const steamAPI_recentActivity = new URL(
 	`http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?format=json&key=${config.apiKey}`
@@ -29,8 +30,6 @@ async function recentActivity(value) {
 		'steamid',
 		await getIDByNameOrID(value)
 	);
-
-	console.log('Recent activity command executed');
 
 	let apiResponse = await fetch(steamAPI_recentActivity);
 
@@ -71,11 +70,19 @@ async function run(interaction) {
 	);
 
 	if (error) {
+		Log(
+			`${interaction.user.tag} tried to execute /recentactivity with the following arguments "${value}" but an error has occurred: ${error}`,
+			'info'
+		);
 		return interaction.reply({ content: error, ephemeral: true });
 	}
 
 	await interaction.reply(
-		`You have played ${playedTime} hours over the last 2 weeks on ${gamesCount} games, which are  ${gameName}`
+		`You have played ${playedTime} hours over the last 2 weeks on ${gamesCount} games, which are ${gameName}`
+	);
+	Log(
+		`/recentactivity command executed by ${interaction.user.tag} with the following arguments "${value}"`,
+		'info'
 	);
 }
 

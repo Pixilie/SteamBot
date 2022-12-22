@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { getIDByNameOrID } from '../helpers.js';
 import { isPrivate } from '../helpers.js';
+import { Log } from '../helpers.js';
 
 const steamAPI_gamesOwned = new URL(
 	`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?format=json&key=${config.apiKey}`
@@ -28,8 +29,6 @@ async function gamesOwned(value) {
 		await getIDByNameOrID(value)
 	);
 
-	console.log('Games owned command executed');
-
 	let apiResponse = await fetch(steamAPI_gamesOwned);
 
 	if (apiResponse.status !== 200) {
@@ -53,10 +52,18 @@ async function run(interaction) {
 	const { games, error } = await gamesOwned(value);
 
 	if (error) {
+		Log(
+			`${interaction.user.tag} tried to execute /ownedgames with the following arguments "${value}" but an error has occurred: ${error}`,
+			'info'
+		);
 		return interaction.reply({ content: error, ephemeral: true });
 	}
 
 	await interaction.reply(`You own ${games} games on Steam`);
+	Log(
+		`/ownedgames command executed by ${interaction.user.tag} with the following arguments "${value}"`,
+		'info'
+	);
 }
 
 export { run, COMMAND_DEFINITION };

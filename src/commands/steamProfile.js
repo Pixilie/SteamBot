@@ -4,6 +4,7 @@ import { MessageEmbed } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { getIDByNameOrID } from '../helpers.js';
 import { isPrivate } from '../helpers.js';
+import { Log } from '../helpers.js';
 
 const steamAPI_steamProfile = new URL(
 	`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.apiKey}&format=json`
@@ -29,15 +30,12 @@ async function steamProfile(value) {
 		await getIDByNameOrID(value)
 	);
 
-	console.log('Steam profile command executed');
-
 	let APIresponse = await fetch(steamAPI_steamProfile);
+	let content = await APIresponse.json();
 
-	if (APIresponse.status !== 200) {
+	if (content.response.players.length == 0) {
 		return { error: `An error has occurred, ${value} is invalid` };
 	}
-
-	let content = await APIresponse.json();
 
 	if ((await isPrivate(content.response)) === true) {
 		return { error: `This profile is private` };
@@ -45,7 +43,7 @@ async function steamProfile(value) {
 
 	let player = content.response.players[0];
 
-	const steamProfileEmbed = new MessageEmbed()
+	let steamProfileEmbed = new MessageEmbed()
 		.setColor('#0099ff')
 		.setTitle(`${player.personaname}'s Steam profile`)
 		.setURL(player.profileurl)
@@ -77,10 +75,18 @@ async function run(interaction) {
 	const { profile, error } = await steamProfile(value);
 
 	if (error) {
+		Log(
+			`${interaction.user.tag} tried to execute /steamprofile with the following arguments "${value}" but an error has occurred: ${error}`,
+			'info'
+		);
 		return interaction.reply({ content: error, ephemeral: true });
 	}
 
 	await interaction.reply({ embeds: [profile] });
+	Log(
+		`/steamprofile command executed by ${interaction.user.tag} with the following arguments "${value}"`,
+		'info'
+	);
 }
 
 export { run, COMMAND_DEFINITION };

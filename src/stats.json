@@ -1,0 +1,11 @@
+{
+    "uses": [ {
+        "steamProfileCommand": "0",
+        "getTimeCommand": "0",
+        "recentActivityCommand": "0",
+        "gamesOwnedCommand": "0",
+        "helpCommand": "0"
+    } ],
+    
+    "errors": "0"
+}

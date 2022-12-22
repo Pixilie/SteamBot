@@ -1,5 +1,7 @@
 import config from '../config.json' assert { type: 'json' };
 import fetch from 'node-fetch';
+import { Logtail } from '@logtail/node';
+import { LogLevel } from '@logtail/types';
 
 const steamAPI_getNameByID = new URL(
 	`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${config.apiKey}&format=json`
@@ -12,8 +14,6 @@ const steamAPI_getNameByID = new URL(
  */
 export async function getIDByName(name) {
 	steamAPI_getNameByID.searchParams.set('vanityurl', name);
-
-	console.log('getIDByName function executed');
 
 	let response = await fetch(steamAPI_getNameByID)
 		.then((res) => res.json())
@@ -29,8 +29,6 @@ export async function getIDByName(name) {
  * @returns {Promise<string|null>}
  */
 export async function getIDByNameOrID(value) {
-	console.log('getIDByNameOrID function executed');
-
 	// If the value is a valid Steam ID, return it
 	if (/^7656\d{13}$/u.test(value)) {
 		return value;
@@ -40,9 +38,8 @@ export async function getIDByNameOrID(value) {
 	const id = await getIDByName(value);
 
 	if (id === null) {
-		console.log(`No SteamID found for ${value}`);
+		return { error: `No SteamID found for ${value}` };
 	} else {
-		console.log(`SteamID found for ${value}: ${id}`);
 		return id.toString();
 	}
 }
@@ -53,11 +50,28 @@ export async function getIDByNameOrID(value) {
  * @returns {Promise<string>}
  */
 export async function isPrivate(value) {
-	console.log('isPrivate function executed');
 	let answer = Object.keys(value);
 	if (answer.length == 0) {
 		return true;
 	} else {
 		return false;
+	}
+}
+
+/**
+ * Send log to logtail
+ * @param {string} text
+ * @returns {Promise<string>}
+ */
+export function Log(text, type) {
+	const logtail = new Logtail('WKEYmMeeUtYpNaPHhgyY8bKP');
+	if (type == 'info') {
+		logtail.info(text, LogLevel.Info);
+	} else if (type == 'error') {
+		logtail.error(text, LogLevel.Error);
+	} else if (type == 'warn') {
+		logtail.warn(text, LogLevel.Warn);
+	} else if (type == 'debug') {
+		logtail.debug(text, LogLevel.Debug);
 	}
 }

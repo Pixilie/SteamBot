@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { getIDByNameOrID } from '../helpers.js';
 import { isPrivate } from '../helpers.js';
+import { Log } from '../helpers.js';
 
 const steamAPI_timePlayed = new URL(
 	`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?format=json&key=${config.apiKey}`
@@ -27,8 +28,6 @@ async function getTime(value) {
 		'steamid',
 		await getIDByNameOrID(value)
 	);
-
-	console.log('Get time command executed');
 
 	let APIresponse = await fetch(steamAPI_timePlayed);
 
@@ -56,10 +55,18 @@ async function run(interaction) {
 	const { time, error } = await getTime(value);
 
 	if (error) {
+		Log(
+			`${interaction.user.tag} tried to execute /time with the following arguments "${value}" but an error has occurred: ${error}`,
+			'info'
+		);
 		return interaction.reply({ content: error, ephemeral: true });
 	}
 
 	await interaction.reply(`You have played ${time} hours on Steam`);
+	Log(
+		`/time command executed by ${interaction.user.tag} with the following arguments "${value}"`,
+		'info'
+	);
 }
 
 export { run, COMMAND_DEFINITION };

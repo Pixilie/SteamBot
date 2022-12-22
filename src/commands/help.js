@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { MessageEmbed } from 'discord.js';
+import { Log } from '../helpers.js';
 
 const COMMAND_DEFINITION = new SlashCommandBuilder()
 	.setName('help')
@@ -35,5 +36,6 @@ async function run(interaction) {
 	await interaction.reply({
 		embeds: [helpCommand],
 	});
+	Log(`/help command executed by ${interaction.user.tag} `, 'info');
 }
 export { run, COMMAND_DEFINITION };
