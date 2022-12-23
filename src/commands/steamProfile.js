@@ -42,9 +42,29 @@ async function steamProfile(value) {
 	}
 
 	let player = content.response.players[0];
+	let color = '';
+	let ig = '';
+	let states = '';
+
+	if (player.personastate == 0) {
+		color = '#000000';
+		states = 'offline';
+	} else if (player.personastate == 1) {
+		color = '#27b900';
+		states = 'online';
+	} else if (player.personastate == 3) {
+		color = '#fdc71c';
+		states = 'away';
+	}
+
+	if (player.gameextrainfo) {
+		ig = `Currently in a game on ${player.gameextrainfo}`;
+	} else {
+		ig = `Currently ${states}`;
+	}
 
 	let steamProfileEmbed = new MessageEmbed()
-		.setColor('#0099ff')
+		.setColor(color)
 		.setTitle(`${player.personaname}'s Steam profile`)
 		.setURL(player.profileurl)
 		.setDescription(
@@ -63,6 +83,10 @@ async function steamProfile(value) {
 			{
 				name: 'Creation date',
 				value: `<t:${player.timecreated}:F>`,
+			},
+			{
+				name: 'Status',
+				value: ig,
 			}
 		);
 
