@@ -1,5 +1,5 @@
 # SteamBot
-Version: 1.0
+Version: 1.1.0
 
 ## Presentation
 SteamBot is a discord bot developed in discord.js that gives you interesting and useful stats on your Steam profile such as the amount of time you lost playing, how many games you owned and so on...
