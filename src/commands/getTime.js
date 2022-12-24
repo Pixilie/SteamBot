@@ -4,6 +4,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { getIDByNameOrID } from '../helpers.js';
 import { isPrivate } from '../helpers.js';
 import { Log } from '../helpers.js';
+import { steamProfileName } from '../helpers.js';
 
 const steamAPI_timePlayed = new URL(
 	`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?format=json&key=${config.apiKey}`
@@ -30,6 +31,7 @@ async function getTime(value) {
 	);
 
 	let APIresponse = await fetch(steamAPI_timePlayed);
+	let pseudo = await steamProfileName(value);
 
 	if (APIresponse.status !== 200) {
 		return { error: `An error has occurred, ${value} is invalid` };
@@ -46,23 +48,27 @@ async function getTime(value) {
 		0
 	);
 
-	return { time: Math.round(playTime / 60) };
+	return { time: Math.round(playTime / 60), pseudo: pseudo };
 }
 
 async function run(interaction) {
 	let value = interaction.options.getString('arguments');
 
-	const { time, error } = await getTime(value);
+	const { time, error, pseudo } = await getTime(value);
 
 	if (error) {
 		Log(
-			`${interaction.user.tag} tried to execute /time with the following arguments "${value}" but an error has occurred: ${error}`,
+			`${interaction.userMention(
+				interaction.user.id
+			)} tried to execute /time with the following arguments "${value}" but an error has occurred: ${error}`,
 			'info'
 		);
 		return interaction.reply({ content: error, ephemeral: true });
 	}
 
-	await interaction.reply(`You have played ${time} hours on Steam`);
+	await interaction.reply(
+		`<@${interaction.user.id}>, ${pseudo} have played ${time} hours on Steam`
+	);
 	Log(
 		`/time command executed by ${interaction.user.tag} with the following arguments "${value}"`,
 		'info'

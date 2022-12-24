@@ -7,6 +7,10 @@ const steamAPI_getNameByID = new URL(
 	`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${config.apiKey}&format=json`
 );
 
+const steamAPI_steamProfile = new URL(
+	`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.apiKey}&format=json`
+);
+
 /**
  * Get the name of a Steam user by his SteamID64
  * @param {string} name
@@ -61,7 +65,7 @@ export async function isPrivate(value) {
 /**
  * Send log to logtail
  * @param {string} text
- * @returns {Promise<string>}
+ * @returns {<string>}
  */
 export function Log(text, type) {
 	const logtail = new Logtail('WKEYmMeeUtYpNaPHhgyY8bKP');
@@ -74,4 +78,21 @@ export function Log(text, type) {
 	} else if (type == 'debug') {
 		logtail.debug(text, LogLevel.Debug);
 	}
+}
+
+/**
+ * Get Steam pseudo
+ * @param {string} steamid
+ * @returns {Promise<string>}
+ */
+export async function steamProfileName(steamid) {
+	steamAPI_steamProfile.searchParams.set(
+		'steamids',
+		await getIDByNameOrID(steamid)
+	);
+
+	let APIresponse = await fetch(steamAPI_steamProfile);
+	let content = await APIresponse.json();
+
+	return content.response.players[0].personaname;
 }

@@ -58,7 +58,7 @@ async function steamProfile(value) {
 	}
 
 	if (player.gameextrainfo) {
-		ig = `Currently in a game on ${player.gameextrainfo}`;
+		ig = `Currently in game on ${player.gameextrainfo}`;
 	} else {
 		ig = `Currently ${states}`;
 	}
