@@ -1,6 +1,6 @@
 # SteamBot
-Version: 1.1.1
-By: Kristen
+Version: 1.1.1  
+By: Kristen  
 Not hosted for the moment, I'm working on it. But you can still add it to your server.
 
 ## Presentation
