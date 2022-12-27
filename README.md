@@ -1,7 +1,7 @@
 # SteamBot
 Version: 1.1.1  
 By: Kristen  
-Not hosted for the moment, I'm working on it. But you can still add it to your server.
+The bot is not currently hosted, but I am working on it. You can still add it to your server.
 
 ## Presentation
 SteamBot is a Discord bot created using the Discord.js library that provides you with interesting and useful statistics about your Steam profile, including the amount of time you've spent playing games, the number of games you own, and more.
