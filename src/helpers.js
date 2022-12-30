@@ -69,7 +69,7 @@ export async function isPrivate(value) {
  * @returns {<string>}
  */
 export function Log(text, type) {
-	const logtail = new Logtail('WKEYmMeeUtYpNaPHhgyY8bKP');
+	const logtail = new Logtail(config.logtailKey);
 	if (type == 'info') {
 		logtail.info(text, LogLevel.Info);
 	} else if (type == 'error') {

@@ -11,3 +11,6 @@ config.json
 # Editor directories
 .vscode/*
 !.vscode/extensions.json
+
+# Database
+.env
