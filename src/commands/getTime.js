@@ -5,6 +5,7 @@ import { getIDByNameOrID } from '../helpers.js';
 import { isPrivate } from '../helpers.js';
 import { Log } from '../helpers.js';
 import { steamProfileName } from '../helpers.js';
+import { isLink } from '../helpers.js';
 
 const steamAPI_timePlayed = new URL(
 	`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?format=json&key=${config.apiKey}`
@@ -15,16 +16,24 @@ const COMMAND_DEFINITION = new SlashCommandBuilder()
 	.setDescription('Get cumulated time on Steam games')
 	.addStringOption((option) =>
 		option
-			.setName('arguments')
-			.setDescription('Pseudonym or SteamID of the user')
-			.setRequired(true)
+			.setName('pseudo-or-id64')
+			.setDescription("User's Steam pseudo or user's SteamID64")
+			.setRequired(false)
 	);
 
 /**
  * Get cumulated time from steam API with the pseudonym or the SteamID of the user
  * @param {string} value Pseudonym or SteamID of the user
  */
-async function getTime(value) {
+async function getTime(value, interaction) {
+	const { steamid, error } = await isLink(value, interaction);
+
+	if (error) {
+		return { error: error };
+	} else {
+		value = steamid;
+	}
+
 	steamAPI_timePlayed.searchParams.set(
 		'steamid',
 		await getIDByNameOrID(value)
@@ -52,9 +61,9 @@ async function getTime(value) {
 }
 
 async function run(interaction) {
-	let value = interaction.options.getString('arguments');
+	let value = interaction.options.getString('pseudo-or-id64');
 
-	const { time, error, pseudo } = await getTime(value);
+	const { time, error, pseudo } = await getTime(value, interaction);
 
 	if (error) {
 		Log(

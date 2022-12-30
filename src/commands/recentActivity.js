@@ -5,6 +5,7 @@ import { getIDByNameOrID } from '../helpers.js';
 import { isPrivate } from '../helpers.js';
 import { Log } from '../helpers.js';
 import { steamProfileName } from '../helpers.js';
+import { isLink } from '../helpers.js';
 
 const steamAPI_recentActivity = new URL(
 	`http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?format=json&key=${config.apiKey}`
@@ -17,16 +18,24 @@ let COMMAND_DEFINITION = new SlashCommandBuilder()
 	)
 	.addStringOption((option) =>
 		option
-			.setName('arguments')
-			.setDescription('Pseudonym or SteamID of the user')
-			.setRequired(true)
+			.setName('pseudo-or-id64')
+			.setDescription("User's Steam pseudo or user's SteamID64")
+			.setRequired(false)
 	);
 
 /**
  * Get recent activity of a user from steam API with the pseudonym or the SteamID of the user
  * @param {string} value Pseudonym or SteamID of the user
  */
-async function recentActivity(value) {
+async function recentActivity(value, interaction) {
+	const { steamid, error } = await isLink(value, interaction);
+
+	if (error) {
+		return { error: error };
+	} else {
+		value = steamid;
+	}
+
 	steamAPI_recentActivity.searchParams.set(
 		'steamid',
 		await getIDByNameOrID(value)
@@ -66,10 +75,10 @@ async function recentActivity(value) {
 }
 
 async function run(interaction) {
-	let value = interaction.options.getString('arguments');
+	let value = interaction.options.getString('pseudo-or-id64');
 
 	const { playedTime, gamesCount, gameName, error, pseudo } =
-		await recentActivity(value);
+		await recentActivity(value, interaction);
 
 	if (error) {
 		Log(

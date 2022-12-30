@@ -5,6 +5,7 @@ import { getIDByNameOrID } from '../helpers.js';
 import { isPrivate } from '../helpers.js';
 import { Log } from '../helpers.js';
 import { steamProfileName } from '../helpers.js';
+import { isLink } from '../helpers.js';
 
 const steamAPI_gamesOwned = new URL(
 	`http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?format=json&key=${config.apiKey}`
@@ -15,16 +16,24 @@ let COMMAND_DEFINITION = new SlashCommandBuilder()
 	.setDescription('Number of games owned by a Steam user')
 	.addStringOption((option) =>
 		option
-			.setName('arguments')
-			.setDescription('Pseudonym or SteamID of the user')
-			.setRequired(true)
+			.setName('pseudo-or-id64')
+			.setDescription("User's Steam pseudo or user's SteamID64")
+			.setRequired(false)
 	);
 
 /**
  * Get number of games you own from steam API with the pseudonym or the SteamID of the user
  * @param {string} value Pseudonym or SteamID of the user
  */
-async function gamesOwned(value) {
+async function gamesOwned(value, interaction) {
+	const { steamid, error } = await isLink(value, interaction);
+
+	if (error) {
+		return { error: error };
+	} else {
+		value = steamid;
+	}
+
 	steamAPI_gamesOwned.searchParams.set(
 		'steamid',
 		await getIDByNameOrID(value)
@@ -49,9 +58,9 @@ async function gamesOwned(value) {
 }
 
 async function run(interaction) {
-	let value = interaction.options.getString('arguments');
+	let value = interaction.options.getString('pseudo-or-id64');
 
-	const { games, error, pseudo } = await gamesOwned(value);
+	const { games, error, pseudo } = await gamesOwned(value, interaction);
 
 	if (error) {
 		Log(

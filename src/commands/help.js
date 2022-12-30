@@ -31,6 +31,10 @@ const helpCommand = new MessageEmbed()
 		{
 			name: '/recentactivity `SteamID64 or pseudonym`',
 			value: `Display the last activity of a Steam user`,
+		},
+		{
+			name: '/setsteamid `SteamID64`',
+			value: `Associate your SteamID64 to your Discord account. Once set you can use commands without any arguments`,
 		}
 	);
 

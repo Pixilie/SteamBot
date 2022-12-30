@@ -5,6 +5,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { getIDByNameOrID } from '../helpers.js';
 import { isPrivate } from '../helpers.js';
 import { Log } from '../helpers.js';
+import { isLink } from '../helpers.js';
 
 const steamAPI_steamProfile = new URL(
 	`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.apiKey}&format=json`
@@ -15,16 +16,24 @@ let COMMAND_DEFINITION = new SlashCommandBuilder()
 	.setDescription('Informations on a Steam profile')
 	.addStringOption((option) =>
 		option
-			.setName('arguments')
-			.setDescription('Pseudonym or SteamID of the user')
-			.setRequired(true)
+			.setName('pseudo-or-id64')
+			.setDescription("User's Steam pseudo or user's SteamID64")
+			.setRequired(false)
 	);
 
 /**
  * Get steam user's profile with the pseudonym or the SteamID of the user
  * @param {string} value Pseudonym or SteamID of the user
  */
-async function steamProfile(value) {
+async function steamProfile(value, interaction) {
+	const { steamid, error } = await isLink(value, interaction);
+
+	if (error) {
+		return { error: error };
+	} else {
+		value = steamid;
+	}
+
 	steamAPI_steamProfile.searchParams.set(
 		'steamids',
 		await getIDByNameOrID(value)
@@ -94,9 +103,9 @@ async function steamProfile(value) {
 }
 
 async function run(interaction) {
-	let value = interaction.options.getString('arguments');
+	let value = interaction.options.getString('pseudo-or-id64');
 
-	const { profile, error } = await steamProfile(value);
+	const { profile, error } = await steamProfile(value, interaction);
 
 	if (error) {
 		Log(

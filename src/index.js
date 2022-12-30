@@ -8,6 +8,7 @@ import * as recentActivity from './commands/recentActivity.js';
 import * as gamesOwned from './commands/gamesOwned.js';
 import * as steamProfile from './commands/steamProfile.js';
 import * as helpCommand from './commands/help.js';
+import * as setSteamID from './commands/setSteamID.js';
 import { Logtail } from '@logtail/node';
 import { Log } from './helpers.js';
 
@@ -25,6 +26,7 @@ const commands = [
 	gamesOwned.COMMAND_DEFINITION,
 	steamProfile.COMMAND_DEFINITION,
 	helpCommand.COMMAND_DEFINITION,
+	setSteamID.COMMAND_DEFINITION,
 ].map((command) => command.toJSON());
 
 const rest = new REST({ version: '9' }).setToken(config.token);
@@ -53,6 +55,8 @@ client.on('interactionCreate', async (interaction) => {
 		case 'help':
 			helpCommand.run(interaction);
 			break;
+		case 'setsteamid':
+			setSteamID.run(interaction);
 		default:
 			break;
 	}
@@ -60,4 +64,4 @@ client.on('interactionCreate', async (interaction) => {
 
 // Login to Discord
 client.login(config.token);
-Log('Successfully logged in. SteamBot is ready!');
+Log('Successfully logged in. \n SteamBot is ready!');

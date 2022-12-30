@@ -2,6 +2,7 @@ import config from '../config.json' assert { type: 'json' };
 import fetch from 'node-fetch';
 import { Logtail } from '@logtail/node';
 import { LogLevel } from '@logtail/types';
+import { getUser } from './database.js';
 
 const steamAPI_getNameByID = new URL(
 	`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${config.apiKey}&format=json`
@@ -95,4 +96,17 @@ export async function steamProfileName(steamid) {
 	let content = await APIresponse.json();
 
 	return content.response.players[0].personaname;
+}
+
+export async function isLink(value, interaction) {
+	if (!value) {
+		return { steamid: await getUser(interaction.user.id), error: null };
+	}
+
+	if (value == null) {
+		return {
+			steamid: null,
+			error: `You need to link your discord account to your SteamID64. You can to it with the command /setsteamid`,
+		};
+	}
 }
