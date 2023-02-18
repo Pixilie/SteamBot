@@ -1,6 +1,6 @@
 {
 	"name": "steam-bot",
-	"version": "1.1.1",
+	"version": "1.2.2",
 	"main": "./src/index.js",
 	"license": "MIT",
 	"type": "module",
@@ -8,10 +8,14 @@
 		"@discordjs/builders": "^0.13.0",
 		"@discordjs/rest": "^0.4.1",
 		"@logtail/node": "^0.1.14",
-		"@prisma/client": "^4.8.0",
+		"@prisma/client": "^4.10.1",
 		"discord-api-types": "^0.33.0",
 		"discord.js": "^13.7.0",
-		"node-fetch": "^3.2.4",
-		"prisma": "^4.8.0"
+		"dotenv": "^16.0.3",
+		"node": "^19.6.0",
+		"node-fetch": "^3.2.4"
+	},
+	"devDependencies": {
+		"prisma": "^4.10.1"
 	}
 }

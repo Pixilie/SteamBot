@@ -1,14 +1,17 @@
-import config from '../../config.json' assert { type: 'json' };
 import fetch from 'node-fetch';
+import { Logtail } from '@logtail/node';
+import { LogLevel } from '@logtail/types';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { getIDByNameOrID } from '../helpers.js';
 import { isPrivate } from '../helpers.js';
-import { Log } from '../helpers.js';
 import { steamProfileName } from '../helpers.js';
 import { isLink } from '../helpers.js';
 
+// Logtail key
+const logtail = new Logtail(process.env.LOGTAIL_KEY);
+
 const steamAPI_recentActivity = new URL(
-	`http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?format=json&key=${config.apiKey}`
+	`http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?format=json&key=${process.env.API_KEY}`
 );
 
 let COMMAND_DEFINITION = new SlashCommandBuilder()
@@ -81,9 +84,8 @@ async function run(interaction) {
 		await recentActivity(value, interaction);
 
 	if (error) {
-		Log(
-			`${interaction.user.tag} tried to execute /recentactivity with the following arguments "${value}" but an error has occurred: ${error}`,
-			'info'
+		logtail.error(
+			`${interaction.user.tag} tried to execute /recentactivity with the following arguments "${value}" but an error has occurred: ${error}`, LogLevel.Error
 		);
 		return interaction.reply({ content: error, ephemeral: true });
 	}
@@ -91,9 +93,8 @@ async function run(interaction) {
 	await interaction.reply(
 		`<@${interaction.user.id}>, ${pseudo} have played ${playedTime} hours over the last 2 weeks on ${gamesCount} games, which are ${gameName}`
 	);
-	Log(
-		`/recentactivity command executed by ${interaction.user.tag} with the following arguments "${value}"`,
-		'info'
+	logtail.info(
+		`/recentactivity command executed by ${interaction.user.tag} with the following arguments "${value}"`, LogLevel.Info
 	);
 }
 

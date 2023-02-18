@@ -1,15 +1,17 @@
-import config from '../config.json' assert { type: 'json' };
 import fetch from 'node-fetch';
 import { Logtail } from '@logtail/node';
 import { LogLevel } from '@logtail/types';
 import { getUser } from './database.js';
 
+// Logtail key
+const logtail = new Logtail(process.env.LOGTAIL_KEY);
+
 const steamAPI_getNameByID = new URL(
-	`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${config.apiKey}&format=json`
+	`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${process.env.API_KEY}&format=json`
 );
 
 const steamAPI_steamProfile = new URL(
-	`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.apiKey}&format=json`
+	`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.API_KEY}&format=json`
 );
 
 /**
@@ -64,24 +66,6 @@ export async function isPrivate(value) {
 }
 
 /**
- * Send log to logtail
- * @param {string} text
- * @returns {<string>}
- */
-export function Log(text, type) {
-	const logtail = new Logtail(config.logtailKey);
-	if (type == 'info') {
-		logtail.info(text, LogLevel.Info);
-	} else if (type == 'error') {
-		logtail.error(text, LogLevel.Error);
-	} else if (type == 'warn') {
-		logtail.warn(text, LogLevel.Warn);
-	} else if (type == 'debug') {
-		logtail.debug(text, LogLevel.Debug);
-	}
-}
-
-/**
  * Get Steam pseudo
  * @param {string} steamid
  * @returns {Promise<string>}
@@ -100,10 +84,12 @@ export async function steamProfileName(steamid) {
 
 export async function isLink(value, interaction) {
 	if (!value) {
+		console.log('!value')
 		return { steamid: await getUser(interaction.user.id), error: null };
 	}
 
 	if (value == null) {
+		console.log('value == null')
 		return {
 			steamid: null,
 			error: `You need to link your discord account to your SteamID64. You can to it with the command /setsteamid`,

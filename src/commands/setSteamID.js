@@ -1,7 +1,11 @@
 import fetch from 'node-fetch';
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { Log } from '../helpers.js';
 import { newUser } from '../database.js';
+import { Logtail } from '@logtail/node';
+import { LogLevel } from '@logtail/types';
+
+// Logtail key
+const logtail = new Logtail(process.env.LOGTAIL_KEY);
 
 const COMMAND_DEFINITION = new SlashCommandBuilder()
 	.setName('setsteamid')
@@ -28,16 +32,15 @@ async function run(interaction) {
 	const { error, discordid } = await setSteamID(steamid, interaction);
 
 	if (error) {
-		Log(`The SteamID64 \`${steamid}\` is invalid`, 'error');
+		logtail.error(`The SteamID64 \`${steamid}\` is invalid`, LogLevel.Error);
 		return interaction.reply({ content: error, ephemeral: true });
 	}
 
 	await interaction.reply(
 		`SteamID \`${steamid}\` successfully associated to <@${discordid}>`
 	);
-	Log(
-		`SteamID \`${steamid}\` successfully associated to <@${discordid}>`,
-		'info'
+	logtail.info(
+		`SteamID \`${steamid}\` successfully associated to <@${discordid}>`, LogLevel.Info
 	);
 }
 

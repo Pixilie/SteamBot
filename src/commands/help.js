@@ -1,6 +1,10 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { MessageEmbed } from 'discord.js';
-import { Log } from '../helpers.js';
+import { Logtail } from '@logtail/node';
+import { LogLevel } from '@logtail/types';
+
+// Logtail key
+const logtail = new Logtail(process.env.LOGTAIL_KEY);
 
 const COMMAND_DEFINITION = new SlashCommandBuilder()
 	.setName('help')
@@ -42,6 +46,6 @@ async function run(interaction) {
 	await interaction.reply({
 		embeds: [helpCommand],
 	});
-	Log(`/help command executed by ${interaction.user.tag} `, 'info');
+	logtail.info(`/help command executed by ${interaction.user.tag} `, LogLevel.Info);
 }
 export { run, COMMAND_DEFINITION };

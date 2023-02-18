@@ -13,6 +13,7 @@ async function newUser(steamid, discordid) {
 }
 
 async function getUser(discordid) {
+	console.log('getUser')
 	const user = await prisma.user.findUnique({
 		where: {
 			discordid: discordid,

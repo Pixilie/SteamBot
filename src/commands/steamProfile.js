@@ -1,14 +1,17 @@
-import config from '../../config.json' assert { type: 'json' };
 import fetch from 'node-fetch';
+import { Logtail } from '@logtail/node';
+import { LogLevel } from '@logtail/types';
 import { MessageEmbed } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { getIDByNameOrID } from '../helpers.js';
 import { isPrivate } from '../helpers.js';
-import { Log } from '../helpers.js';
 import { isLink } from '../helpers.js';
 
+// Logtail key
+const logtail = new Logtail(process.env.LOGTAIL_KEY);
+
 const steamAPI_steamProfile = new URL(
-	`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${config.apiKey}&format=json`
+	`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.API_KEY}&format=json`
 );
 
 let COMMAND_DEFINITION = new SlashCommandBuilder()
@@ -108,17 +111,15 @@ async function run(interaction) {
 	const { profile, error } = await steamProfile(value, interaction);
 
 	if (error) {
-		Log(
-			`${interaction.user.tag} tried to execute /steamprofile with the following arguments "${value}" but an error has occurred: ${error}`,
-			'info'
+		logtail.error(
+			`${interaction.user.tag} tried to execute /steamprofile with the following arguments "${value}" but an error has occurred: ${error}`, LogLevel.Error
 		);
 		return interaction.reply({ content: error, ephemeral: true });
 	}
 
 	await interaction.reply({ embeds: [profile] });
-	Log(
-		`/steamprofile command executed by ${interaction.user.tag} with the following arguments "${value}"`,
-		'info'
+	logtail.info(
+		`/steamprofile command executed by ${interaction.user.tag} with the following arguments "${value}"`, LogLevel.Info
 	);
 }
 
