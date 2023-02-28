@@ -5,7 +5,7 @@
 	"license": "MIT",
 	"type": "module",
 	"dependencies": {
-		"@discordjs/builders": "^0.13.0",
+		"@discordjs/builders": "^1.4.0",
 		"@discordjs/rest": "^1.5.0",
 		"@logtail/node": "^0.1.14",
 		"@prisma/client": "^4.10.1",
