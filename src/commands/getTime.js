@@ -27,6 +27,8 @@ const COMMAND_DEFINITION = new SlashCommandBuilder()
 /**
  * Get cumulated time from steam API with the pseudonym or the SteamID of the user
  * @param {string} value Pseudonym or SteamID of the user
+ * @param {object} interaction Interaction object
+ * @returns {Promise<{time: number, pseudo: string}|{error: string}>}
  */
 async function getTime(value, interaction) {
 	const { steamid, error } = await isLink(value, interaction);
@@ -63,6 +65,11 @@ async function getTime(value, interaction) {
 	return { time: Math.round(playTime / 60), pseudo: pseudo };
 }
 
+
+/**
+ * Execute /time command
+ * @param {object} interaction Interaction object
+ */
 async function run(interaction) {
 	let value = interaction.options.getString('pseudo-or-id64');
 

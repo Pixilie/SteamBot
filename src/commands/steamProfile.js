@@ -27,6 +27,8 @@ let COMMAND_DEFINITION = new SlashCommandBuilder()
 /**
  * Get steam user's profile with the pseudonym or the SteamID of the user
  * @param {string} value Pseudonym or SteamID of the user
+ * @param {object} interaction Interaction object
+ * @returns {object} Object containing the profile embed or an error
  */
 async function steamProfile(value, interaction) {
 	const { steamid, error } = await isLink(value, interaction);
@@ -105,6 +107,11 @@ async function steamProfile(value, interaction) {
 	return { profile: steamProfileEmbed };
 }
 
+/**
+ * Execute the steamprofile command
+ * @param {object} interaction Interaction object
+ * @returns {Promise<void>}
+ */
 async function run(interaction) {
 	let value = interaction.options.getString('pseudo-or-id64');
 

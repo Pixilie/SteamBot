@@ -29,6 +29,8 @@ let COMMAND_DEFINITION = new SlashCommandBuilder()
 /**
  * Get recent activity of a user from steam API with the pseudonym or the SteamID of the user
  * @param {string} value Pseudonym or SteamID of the user
+ * @param {object} interaction Interaction object
+ * @returns {object} Object containing the recent activity embed or an error
  */
 async function recentActivity(value, interaction) {
 	const { steamid, error } = await isLink(value, interaction);
@@ -77,6 +79,10 @@ async function recentActivity(value, interaction) {
 	};
 }
 
+/**
+ * Execute the command /recentactivity
+ * @param {object} interaction Interaction object from Discord
+ */
 async function run(interaction) {
 	let value = interaction.options.getString('pseudo-or-id64');
 

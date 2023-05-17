@@ -17,6 +17,12 @@ const COMMAND_DEFINITION = new SlashCommandBuilder()
 			.setRequired(true)
 	);
 
+/**
+ * Associate your SteamID to your Discord ID
+ * @param {string} steamid SteamID64
+ * @param {object} interaction Interaction object
+ * @returns {Promise<{discordid: string}|{error: string}>}
+ */
 async function setSteamID(steamid, interaction) {
 	if (/^7656\d{13}$/u.test(steamid)) {
 		const user = await newUser(steamid, interaction.user.id);
@@ -27,6 +33,10 @@ async function setSteamID(steamid, interaction) {
 	return { discordid: interaction.user.id };
 }
 
+/**
+ * Associate your SteamID to your Discord ID
+ * @param {object} interaction Interaction object
+ */
 async function run(interaction) {
 	const steamid = interaction.options.getString('steamid64');
 	const { error, discordid } = await setSteamID(steamid, interaction);

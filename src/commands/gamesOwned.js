@@ -27,6 +27,8 @@ let COMMAND_DEFINITION = new SlashCommandBuilder()
 /**
  * Get number of games you own from steam API with the pseudonym or the SteamID of the user
  * @param {string} value Pseudonym or SteamID of the user
+ * @param {object} interaction Interaction object
+ * @returns {Promise<{games: number, pseudo: string}|{error: string}>}
  */
 async function gamesOwned(value, interaction) {
 	const { steamid, error } = await isLink(value, interaction);
@@ -60,6 +62,10 @@ async function gamesOwned(value, interaction) {
 	return { games: gamesOwned, pseudo: pseudo };
 }
 
+/**
+ * Execute /ownedgames command
+ * @param {object} interaction Interaction object
+ */
 async function run(interaction) {
 	let value = interaction.options.getString('pseudo-or-id64');
 

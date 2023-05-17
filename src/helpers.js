@@ -84,15 +84,15 @@ export async function steamProfileName(steamid) {
 
 export async function isLink(value, interaction) {
 	if (!value) {
-		console.log('!value')
 		return { steamid: await getUser(interaction.user.id), error: null };
 	}
 
 	if (value == null) {
-		console.log('value == null')
 		return {
 			steamid: null,
 			error: `You need to link your discord account to your SteamID64. You can to it with the command /setsteamid`,
 		};
+	} else {
+		return { steamid: value, error: null };
 	}
 }

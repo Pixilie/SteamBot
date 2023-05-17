@@ -1,8 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
-// use `prisma` in your application to read and write data in your DB
 
+/**
+ * Creates a new user in the database
+ * @param {string} steamid SteamID of the user
+ * @param {string} discordid DiscordID of the user
+ */
 async function newUser(steamid, discordid) {
 	const user = await prisma.user.create({
 		data: {
@@ -12,8 +16,11 @@ async function newUser(steamid, discordid) {
 	});
 }
 
+/**
+ * Get the SteamID of the user from the database
+ * @param {string} discordid DiscordID of the user
+ */
 async function getUser(discordid) {
-	console.log('getUser')
 	const user = await prisma.user.findUnique({
 		where: {
 			discordid: discordid,

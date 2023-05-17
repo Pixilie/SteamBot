@@ -42,6 +42,10 @@ const helpCommand = new MessageEmbed()
 		}
 	);
 
+/**
+ * Execute the /help command
+ * @param {object} interaction Interaction object
+ */
 async function run(interaction) {
 	await interaction.reply({
 		embeds: [helpCommand],
