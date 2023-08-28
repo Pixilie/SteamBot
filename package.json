@@ -16,6 +16,6 @@
 		"node-fetch": "^3.2.4"
 	},
 	"devDependencies": {
-		"prisma": "^4.10.1"
+		"prisma": "^5.2.0"
 	}
 }
