@@ -1,7 +1,6 @@
 # SteamBot
-Version: 1.2.3
-By: Kristen  
-The bot will be host soon...
+Version: 1.2.3 (Stable)
+By: Kristen
 
 ## Presentation
 SteamBot is a Discord bot created using the Discord.js library that provides you with interesting and useful statistics about your Steam profile, including the amount of time you've spent playing games, the number of games you own, and more.
@@ -13,4 +12,14 @@ The bot is currently on version 1.2.3 and may still have some bugs. If you have 
 You can get all the information needed by executing /help on your discord server
 
 ## Add it to your server
-You can add it to your server by clicking this [link](https://discord.com/api/oauth2/authorize?client_id=958811114454515722&permissions=551903381504&scope=bot%20applications.commands).
+### Create the .env file
+Don't forget to add a .env file at the root of the project.
+The .env file should look like this:
+```env
+TOKEN=your_bot_token
+API_KEY=your_steam_api_key
+LOGTAIL_KEY=your_logtail_key
+```
+
+### Set up docker
+Search on the internet how to install docker.
