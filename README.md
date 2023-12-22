@@ -1,5 +1,5 @@
 # SteamBot
-Version: 1.2.3 (Stable) 
+Version: 1.2.3 (Stable)    
 By: Kristen
 
 ## Presentation
